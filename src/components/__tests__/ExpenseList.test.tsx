@@ -50,39 +50,39 @@ describe('ExpenseList', () => {
 
     expect(screen.getByText('Dinner')).toBeInTheDocument()
     expect(screen.getByText('Groceries')).toBeInTheDocument()
-    // member-1 is current user, so "Dinner" paid by "dir"
     expect(screen.getAllByText(/dir/i).length).toBeGreaterThan(0)
-    // member-2 paid Groceries → shows "Bob"
     expect(screen.getByText('Bob')).toBeInTheDocument()
   })
 
   it('renders expense amounts', () => {
     render(<ExpenseList {...defaultProps} expenses={expenses} />)
 
-    // EUR formatted amounts
     expect(screen.getByText(/45/)).toBeInTheDocument()
     expect(screen.getByText(/30/)).toBeInTheDocument()
   })
 
-  it('calls onEdit when edit button is clicked', async () => {
+  it('calls onEdit when edit option is clicked via menu', async () => {
     const user = userEvent.setup()
     const onEdit = vi.fn()
     render(<ExpenseList {...defaultProps} expenses={expenses} onEdit={onEdit} />)
 
-    const editButtons = screen.getAllByRole('button', { name: /ausgabe bearbeiten/i })
-    await user.click(editButtons[0])
+    const menuButtons = screen.getAllByRole('button', { name: /aktionen/i })
+    await user.click(menuButtons[0])
+    await user.click(screen.getByRole('button', { name: /ausgabe bearbeiten/i }))
 
     expect(onEdit).toHaveBeenCalledTimes(1)
     expect(onEdit).toHaveBeenCalledWith(expenses[0])
   })
 
-  it('calls onDelete when delete button is clicked', async () => {
+  it('calls onDelete when delete option is clicked via menu', async () => {
     const user = userEvent.setup()
     const onDelete = vi.fn()
     render(<ExpenseList {...defaultProps} expenses={expenses} onDelete={onDelete} />)
 
-    const deleteButtons = screen.getAllByRole('button', { name: /ausgabe löschen/i })
-    await user.click(deleteButtons[1])
+    // Open the second expense's menu
+    const menuButtons = screen.getAllByRole('button', { name: /aktionen/i })
+    await user.click(menuButtons[1])
+    await user.click(screen.getByRole('button', { name: /ausgabe löschen/i }))
 
     expect(onDelete).toHaveBeenCalledTimes(1)
     expect(onDelete).toHaveBeenCalledWith('expense-2')

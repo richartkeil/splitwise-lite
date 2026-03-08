@@ -1,7 +1,7 @@
+import { useState, useRef, useEffect } from 'react'
 import type { Expense, Member } from '@/lib/types'
 import { cn, formatCurrency } from '@/lib/utils'
 import { Card } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
 
 type ExpenseListProps = {
   expenses: Expense[]
@@ -26,6 +26,56 @@ function formatDate(dateString: string): string {
     month: 'short',
     day: 'numeric',
   })
+}
+
+function ExpenseMenu({ onEdit, onDelete }: { onEdit: () => void; onDelete: () => void }) {
+  const [open, setOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    function handleClick(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [open])
+
+  return (
+    <div className="relative shrink-0" ref={menuRef}>
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className="flex items-center justify-center w-8 h-8 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-white/60 transition-all"
+        aria-label="Aktionen"
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <circle cx="8" cy="3" r="1.5" />
+          <circle cx="8" cy="8" r="1.5" />
+          <circle cx="8" cy="13" r="1.5" />
+        </svg>
+      </button>
+      {open && (
+        <div className="absolute right-0 top-9 z-10 glass-strong rounded-xl shadow-fluent-lg py-1 min-w-[140px]">
+          <button
+            onClick={() => { onEdit(); setOpen(false) }}
+            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-white/60 transition-colors"
+            aria-label="Ausgabe bearbeiten"
+          >
+            Bearbeiten
+          </button>
+          <button
+            onClick={() => { onDelete(); setOpen(false) }}
+            className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50/50 transition-colors"
+            aria-label="Ausgabe löschen"
+          >
+            Löschen
+          </button>
+        </div>
+      )}
+    </div>
+  )
 }
 
 export function ExpenseList({
@@ -85,25 +135,10 @@ export function ExpenseList({
                   </span>
                 </p>
               </div>
-              <div className="flex items-center gap-1 shrink-0">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => onEdit(expense)}
-                  aria-label="Ausgabe bearbeiten"
-                >
-                  Bearbeiten
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-red-500 hover:text-red-600 hover:bg-red-50/50"
-                  onClick={() => onDelete(expense.id)}
-                  aria-label="Ausgabe löschen"
-                >
-                  Löschen
-                </Button>
-              </div>
+              <ExpenseMenu
+                onEdit={() => onEdit(expense)}
+                onDelete={() => onDelete(expense.id)}
+              />
             </div>
           </Card>
         )
