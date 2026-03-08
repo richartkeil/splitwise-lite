@@ -44,6 +44,8 @@ supabase db reset               # replay all locally
 
 ## Deploy
 
-**Database:** Connect your repo in Supabase dashboard (Settings → Integrations → GitHub). Migrations run automatically on push to main.
+```bash
+bun run deploy              # runs tests, pushes migrations, deploys to Vercel
+```
 
-**Frontend:** Connect your repo to Vercel. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` as environment variables.
+Requires `vercel` CLI logged in and `supabase` CLI linked to your project. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` as Vercel environment variables.

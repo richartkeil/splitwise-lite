@@ -23,3 +23,7 @@ body {
 * {
   @apply border-gray-200;
 }
+
+button, a, [role="button"], select, label[for], input[type="checkbox"], input[type="radio"] {
+  cursor: pointer;
+}
