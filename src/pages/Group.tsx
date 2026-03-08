@@ -62,6 +62,7 @@ export default function Group() {
       <JoinGroupDialog
         open
         groupName={group.name}
+        members={members}
         onJoin={async (name) => {
           setSubmitting(true)
           try {
@@ -73,6 +74,12 @@ export default function Group() {
             setTimeout(() => setError(null), 4000)
           } finally {
             setSubmitting(false)
+          }
+        }}
+        onClaim={(claimedId) => {
+          const member = members.find(m => m.id === claimedId)
+          if (member) {
+            setIdentity(member.id, member.name)
           }
         }}
       />
@@ -135,7 +142,13 @@ export default function Group() {
         <div className="glass-strong rounded-2xl shadow-fluent px-6 py-5">
           <h1 className="text-2xl font-bold text-gray-800">{group.name}</h1>
           <div className="mt-3">
-            <MemberList members={members} currentMemberId={memberId} />
+            <MemberList
+              members={members}
+              currentMemberId={memberId}
+              onAddMember={async (name) => {
+                await addMember(name)
+              }}
+            />
           </div>
         </div>
 
