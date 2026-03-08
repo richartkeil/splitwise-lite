@@ -121,8 +121,8 @@ export function useExpenses(groupId: string | undefined) {
 
   const deleteExpense = async (id: string): Promise<void> => {
     const { error } = await supabase.from('expenses').delete().eq('id', id)
-
     if (error) throw error
+    setExpenses((prev) => prev.filter((e) => e.id !== id))
   }
 
   return { expenses, addExpense, updateExpense, deleteExpense, loading }

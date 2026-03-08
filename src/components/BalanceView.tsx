@@ -67,8 +67,11 @@ export function BalanceView({
                 >
                   {balance > 0 && '+'}
                   {formatCurrency(Math.abs(balance), currency)}
-                  {balance < 0 && ' schuldet'}
-                  {balance > 0 && ' bekommt'}
+                </p>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  {balance > 0 && (isCurrentUser ? 'bekommst du' : 'bekommt zurück')}
+                  {balance < 0 && (isCurrentUser ? 'schuldest du' : 'schuldet')}
+                  {balance === 0 && 'ausgeglichen'}
                 </p>
               </Card>
             )
@@ -91,14 +94,19 @@ export function BalanceView({
             {debts.map((debt) => {
               const involvesCurrentUser =
                 debt.from === currentMemberId || debt.to === currentMemberId
-              const fromName =
-                debt.from === currentMemberId
-                  ? 'Du'
-                  : getMemberName(members, debt.from)
-              const toName =
-                debt.to === currentMemberId
-                  ? 'dir'
-                  : getMemberName(members, debt.to)
+              const fromIsMe = debt.from === currentMemberId
+              const toIsMe = debt.to === currentMemberId
+              const fromName = getMemberName(members, debt.from)
+              const toName = getMemberName(members, debt.to)
+
+              let debtText: React.ReactNode
+              if (fromIsMe) {
+                debtText = <>Du schuldest <span className="font-semibold text-gray-700">{toName}</span></>
+              } else if (toIsMe) {
+                debtText = <><span className="font-semibold text-gray-700">{fromName}</span> schuldet dir</>
+              } else {
+                debtText = <><span className="font-semibold text-gray-700">{fromName}</span> schuldet <span className="font-semibold text-gray-700">{toName}</span></>
+              }
 
               return (
                 <Card
@@ -110,9 +118,7 @@ export function BalanceView({
                 >
                   <div className="flex items-center justify-between gap-3">
                     <p className="text-sm">
-                      <span className="font-semibold text-gray-700">{fromName}</span>
-                      {' schuldet '}
-                      <span className="font-semibold text-gray-700">{toName}</span>
+                      {debtText}
                       {' '}
                       <span className="font-bold text-gray-800">
                         {formatCurrency(debt.amount, currency)}
