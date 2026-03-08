@@ -10,6 +10,7 @@ lerna-debug.log*
 .env
 .claude/settings.local.json
 supabase/.temp
+supabase/.branches
 
 node_modules
 dist
