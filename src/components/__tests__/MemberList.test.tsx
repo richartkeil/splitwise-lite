@@ -21,18 +21,16 @@ describe('MemberList', () => {
   it('highlights current member with distinct styling', () => {
     render(<MemberList members={members} currentMemberId="member-2" />)
 
-    // The current member's container should have the primary highlight class
     const bobText = screen.getByText('Bob')
     const bobContainer = bobText.closest('div[class*="rounded-full"]')
 
-    expect(bobContainer).toHaveClass('bg-primary-50')
-    expect(bobContainer).toHaveClass('border-primary-300')
+    expect(bobContainer).toHaveClass('bg-primary-100/80')
+    expect(bobContainer).toHaveClass('text-primary-700')
 
-    // Other members should not have highlight
     const aliceText = screen.getByText('Alice')
     const aliceContainer = aliceText.closest('div[class*="rounded-full"]')
 
-    expect(aliceContainer).not.toHaveClass('bg-primary-50')
-    expect(aliceContainer).toHaveClass('bg-white')
+    expect(aliceContainer).not.toHaveClass('bg-primary-100/80')
+    expect(aliceContainer).toHaveClass('bg-white/50')
   })
 })

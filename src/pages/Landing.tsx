@@ -16,7 +16,7 @@ export default function Landing() {
 
     setSubmitting(true)
     try {
-      const group = await createGroup(trimmed, 'USD')
+      const group = await createGroup(trimmed, 'EUR')
       navigate(`/g/${group.slug}`)
     } catch (err) {
       console.error('Failed to create group:', err)
@@ -26,31 +26,33 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
-      <div className="max-w-md w-full text-center">
-        <h1 className="text-4xl font-bold text-gray-900 tracking-tight">
+      <div className="max-w-sm w-full text-center">
+        <h1 className="text-4xl font-extrabold text-gray-800 tracking-tight">
           Splitwise Lite
         </h1>
-        <p className="mt-3 text-lg text-gray-500">
+        <p className="mt-3 text-lg text-gray-500 font-medium">
           Split expenses with friends. No account needed.
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-4">
-          <Input
-            id="group-name"
-            placeholder="Group name, e.g. Summer Trip"
-            value={groupName}
-            onChange={(e) => setGroupName(e.target.value)}
-            required
-          />
-          <Button
-            type="submit"
-            className="w-full"
-            size="lg"
-            disabled={!groupName.trim() || submitting}
-          >
-            {submitting ? 'Creating...' : 'Create Group'}
-          </Button>
-        </form>
+        <div className="glass-strong rounded-3xl shadow-fluent-lg p-8 mt-8">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <Input
+              id="group-name"
+              placeholder="Group name, e.g. Summer Trip"
+              value={groupName}
+              onChange={(e) => setGroupName(e.target.value)}
+              required
+            />
+            <Button
+              type="submit"
+              className="w-full"
+              size="lg"
+              disabled={!groupName.trim() || submitting}
+            >
+              {submitting ? 'Creating...' : 'Create Group'}
+            </Button>
+          </form>
+        </div>
       </div>
     </div>
   )

@@ -65,7 +65,7 @@ export function ExpenseForm({
     splitAmong.length > 0
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-5">
       <Input
         id="expense-description"
         label="Description"
@@ -89,14 +89,14 @@ export function ExpenseForm({
       />
 
       <div>
-        <label htmlFor="expense-paid-by" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="expense-paid-by" className="block text-sm font-semibold text-gray-600 mb-1.5">
           Paid by
         </label>
         <select
           id="expense-paid-by"
           value={paidBy}
           onChange={(e) => setPaidBy(e.target.value)}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 focus:outline-none bg-white"
+          className="w-full rounded-xl bg-white/60 border border-white/50 px-4 py-2.5 text-sm shadow-sm backdrop-blur-sm focus:border-primary-400 focus:ring-2 focus:ring-primary-400/30 focus:outline-none transition-all"
         >
           {members.map((member) => (
             <option key={member.id} value={member.id}>
@@ -108,18 +108,18 @@ export function ExpenseForm({
       </div>
 
       <fieldset>
-        <legend className="block text-sm font-medium text-gray-700 mb-2">
+        <legend className="block text-sm font-semibold text-gray-600 mb-2">
           Split among
         </legend>
         <div className="space-y-2">
-          {members.map((member) => (
+          {members.map((member, index) => (
             <label
               key={member.id}
               className={cn(
-                'flex items-center gap-3 rounded-lg border px-3 py-2 cursor-pointer transition-colors',
+                'flex items-center gap-3 rounded-xl border px-3 py-2.5 transition-all',
                 splitAmong.includes(member.id)
-                  ? 'border-primary-300 bg-primary-50'
-                  : 'border-gray-200 hover:bg-gray-50',
+                  ? 'border-primary-300/60 bg-primary-50/50 shadow-sm'
+                  : 'border-white/40 bg-white/30 hover:bg-white/50',
               )}
             >
               <input
@@ -128,7 +128,7 @@ export function ExpenseForm({
                 onChange={() => toggleMember(member.id)}
                 className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
               />
-              <span className="text-sm">
+              <span className="text-sm font-medium text-gray-700">
                 {member.name}
                 {member.id === currentMemberId ? ' (you)' : ''}
               </span>

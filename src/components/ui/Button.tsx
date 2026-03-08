@@ -6,16 +6,20 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 }
 
 const variantClasses: Record<NonNullable<ButtonProps['variant']>, string> = {
-  primary: 'bg-primary-600 text-white hover:bg-primary-700',
-  secondary: 'bg-white border border-gray-300 hover:bg-gray-50',
-  danger: 'bg-red-600 text-white hover:bg-red-700',
-  ghost: 'bg-transparent hover:bg-gray-100',
+  primary:
+    'bg-gradient-to-b from-primary-500 to-primary-600 text-white hover:from-primary-600 hover:to-primary-700 shadow-md shadow-primary-500/25 active:shadow-sm',
+  secondary:
+    'glass text-gray-700 hover:bg-white/80 shadow-sm active:shadow-none',
+  danger:
+    'bg-gradient-to-b from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 shadow-md shadow-red-500/25 active:shadow-sm',
+  ghost:
+    'bg-transparent hover:bg-white/50 text-gray-600',
 }
 
 const sizeClasses: Record<NonNullable<ButtonProps['size']>, string> = {
   sm: 'px-3 py-1.5 text-sm',
-  md: 'px-4 py-2 text-sm',
-  lg: 'px-6 py-3 text-base',
+  md: 'px-5 py-2.5 text-sm',
+  lg: 'px-7 py-3 text-base',
 }
 
 export function Button({
@@ -27,7 +31,7 @@ export function Button({
   return (
     <button
       className={cn(
-        'rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50',
+        'rounded-xl font-semibold transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-primary-400/50 focus:ring-offset-2 disabled:opacity-50 active:scale-[0.98]',
         variantClasses[variant],
         sizeClasses[size],
         className,

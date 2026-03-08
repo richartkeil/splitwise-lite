@@ -32,11 +32,11 @@ export function BalanceView({
     <div className="space-y-6">
       {/* Net balances per person */}
       <div>
-        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">
+        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
           Net Balances
         </h3>
-        <div className="grid grid-cols-2 gap-2">
-          {members.map((member) => {
+        <div className="grid grid-cols-2 gap-3">
+          {members.map((member, index) => {
             const balance = Math.round((balances[member.id] ?? 0) * 100) / 100
             const isCurrentUser = member.id === currentMemberId
 
@@ -44,20 +44,22 @@ export function BalanceView({
               <Card
                 key={member.id}
                 className={cn(
-                  'p-3',
-                  isCurrentUser && 'border-primary-200',
+                  'p-4',
+                  isCurrentUser && 'ring-1 ring-primary-200/60',
                 )}
               >
-                <p className={cn('text-sm', isCurrentUser ? 'font-semibold' : 'font-medium')}>
-                  {member.name}
-                  {isCurrentUser ? ' (you)' : ''}
-                </p>
+                <div className="flex items-center gap-2.5 mb-2">
+                  <p className={cn('text-sm truncate', isCurrentUser ? 'font-bold text-gray-800' : 'font-semibold text-gray-600')}>
+                    {member.name}
+                    {isCurrentUser ? ' (you)' : ''}
+                  </p>
+                </div>
                 <p
                   className={cn(
-                    'text-lg font-semibold mt-0.5',
-                    balance > 0 && 'text-green-600',
-                    balance < 0 && 'text-red-600',
-                    balance === 0 && 'text-gray-400',
+                    'text-lg font-bold',
+                    balance > 0 && 'text-emerald-600',
+                    balance < 0 && 'text-red-500',
+                    balance === 0 && 'text-gray-300',
                   )}
                 >
                   {balance > 0 && '+'}
@@ -73,16 +75,16 @@ export function BalanceView({
 
       {/* Simplified debts */}
       <div>
-        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">
+        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
           Settlements Needed
         </h3>
         {debts.length === 0 ? (
-          <Card className="p-6 text-center">
-            <p className="text-lg font-medium text-green-600">All settled up!</p>
-            <p className="text-sm text-gray-500 mt-1">No outstanding debts.</p>
+          <Card className="py-10 text-center">
+            <p className="text-xl font-bold text-emerald-500">All settled up!</p>
+            <p className="text-sm text-gray-400 mt-1.5">No outstanding debts.</p>
           </Card>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-3">
             {debts.map((debt) => {
               const involvesCurrentUser =
                 debt.from === currentMemberId || debt.to === currentMemberId
@@ -100,16 +102,16 @@ export function BalanceView({
                   key={`${debt.from}-${debt.to}`}
                   className={cn(
                     'p-4',
-                    involvesCurrentUser && 'border-primary-200 bg-primary-50/30',
+                    involvesCurrentUser && 'ring-1 ring-primary-200/60',
                   )}
                 >
                   <div className="flex items-center justify-between gap-3">
                     <p className="text-sm">
-                      <span className="font-medium">{fromName}</span>
+                      <span className="font-semibold text-gray-700">{fromName}</span>
                       {' owes '}
-                      <span className="font-medium">{toName}</span>
+                      <span className="font-semibold text-gray-700">{toName}</span>
                       {' '}
-                      <span className="font-semibold text-gray-900">
+                      <span className="font-bold text-gray-800">
                         {formatCurrency(debt.amount, currency)}
                       </span>
                     </p>

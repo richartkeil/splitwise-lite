@@ -10,7 +10,7 @@ describe('Button', () => {
     render(<Button>Click me</Button>)
 
     const button = screen.getByRole('button', { name: 'Click me' })
-    expect(button).toHaveClass('bg-primary-600')
+    expect(button).toHaveClass('from-primary-500')
     expect(button).toHaveClass('text-white')
   })
 
@@ -18,15 +18,16 @@ describe('Button', () => {
     render(<Button variant="secondary">Cancel</Button>)
 
     const button = screen.getByRole('button', { name: 'Cancel' })
-    expect(button).toHaveClass('bg-white')
-    expect(button).toHaveClass('border-gray-300')
+    expect(button).toHaveClass('glass')
+    expect(button).toHaveClass('text-gray-700')
   })
 
   it('renders with danger variant classes', () => {
     render(<Button variant="danger">Delete</Button>)
 
     const button = screen.getByRole('button', { name: 'Delete' })
-    expect(button).toHaveClass('bg-red-600')
+    expect(button).toHaveClass('from-red-500')
+    expect(button).toHaveClass('text-white')
   })
 
   it('renders with ghost variant classes', () => {
@@ -62,8 +63,8 @@ describe('Card', () => {
 
     const card = screen.getByText('Content').closest('div')
     expect(card).toHaveClass('custom-class')
-    expect(card).toHaveClass('bg-white')
-    expect(card).toHaveClass('rounded-xl')
+    expect(card).toHaveClass('glass')
+    expect(card).toHaveClass('rounded-2xl')
   })
 })
 

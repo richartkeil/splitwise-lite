@@ -38,10 +38,10 @@ export function ExpenseList({
 }: ExpenseListProps) {
   if (expenses.length === 0) {
     return (
-      <div className="text-center py-12 text-gray-500">
-        <p className="text-lg font-medium">No expenses yet</p>
-        <p className="text-sm mt-1">Add your first expense to get started.</p>
-      </div>
+      <Card className="text-center py-14">
+        <p className="text-lg font-semibold text-gray-400">No expenses yet</p>
+        <p className="text-sm mt-1.5 text-gray-400">Add your first expense to get started.</p>
+      </Card>
     )
   }
 
@@ -55,32 +55,32 @@ export function ExpenseList({
             key={expense.id}
             className={cn(
               'p-4',
-              paidByCurrentUser && 'border-primary-200 bg-primary-50/30',
+              paidByCurrentUser && 'ring-1 ring-primary-200/60',
             )}
           >
-            <div className="flex items-start justify-between gap-3">
+            <div className="flex items-start gap-3">
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <h4 className="font-medium text-gray-900 truncate">
+                  <h4 className="font-semibold text-gray-800 truncate">
                     {expense.description}
                   </h4>
-                  <span className="text-xs text-gray-400 shrink-0">
+                  <span className="text-xs text-gray-400 shrink-0 font-medium">
                     {formatDate(expense.created_at)}
                   </span>
                 </div>
-                <p className="text-lg font-semibold text-gray-900 mt-0.5">
+                <p className="text-lg font-bold text-gray-800 mt-0.5">
                   {formatCurrency(expense.amount, currency)}
                 </p>
                 <p className="text-sm text-gray-500 mt-1">
                   Paid by{' '}
-                  <span className="font-medium">
+                  <span className="font-semibold text-gray-600">
                     {paidByCurrentUser
                       ? 'you'
                       : getMemberName(members, expense.paid_by)}
                   </span>
                   {' · '}
                   Split among{' '}
-                  <span className="font-medium">
+                  <span className="font-semibold text-gray-600">
                     {formatSplitAmong(members, expense.split_among)}
                   </span>
                 </p>
@@ -97,7 +97,7 @@ export function ExpenseList({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                  className="text-red-500 hover:text-red-600 hover:bg-red-50/50"
                   onClick={() => onDelete(expense.id)}
                   aria-label="Delete expense"
                 >

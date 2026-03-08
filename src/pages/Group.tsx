@@ -32,7 +32,9 @@ export default function Group() {
   if (groupLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-500 text-lg">Loading group...</p>
+        <div className="glass rounded-2xl shadow-fluent px-8 py-6">
+          <p className="text-gray-500 text-lg font-medium">Loading group...</p>
+        </div>
       </div>
     )
   }
@@ -40,9 +42,9 @@ export default function Group() {
   if (groupError || !group) {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900">Group not found</h2>
-          <p className="mt-2 text-gray-500">
+        <div className="glass-strong rounded-3xl shadow-fluent-lg p-10 text-center max-w-sm">
+          <h2 className="text-2xl font-bold text-gray-800">Group not found</h2>
+          <p className="mt-3 text-gray-500">
             This group doesn't exist or the link is invalid.
           </p>
         </div>
@@ -74,27 +76,27 @@ export default function Group() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen pb-24">
       <div className="max-w-lg mx-auto px-4 py-6">
         {/* Header */}
-        <h1 className="text-2xl font-bold text-gray-900">{group.name}</h1>
-
-        {/* Members */}
-        <div className="mt-4">
-          <MemberList members={members} currentMemberId={memberId} />
+        <div className="glass-strong rounded-2xl shadow-fluent px-6 py-5">
+          <h1 className="text-2xl font-bold text-gray-800">{group.name}</h1>
+          <div className="mt-3">
+            <MemberList members={members} currentMemberId={memberId} />
+          </div>
         </div>
 
         {/* Tabs */}
-        <div className="mt-6 flex gap-1 bg-gray-200 rounded-lg p-1">
+        <div className="mt-5 flex gap-1 glass rounded-2xl p-1.5 shadow-fluent">
           {(['expenses', 'balances'] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={cn(
-                'flex-1 rounded-md px-4 py-2 text-sm font-medium transition-colors',
+                'flex-1 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200',
                 activeTab === tab
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900',
+                  ? 'bg-white text-gray-800 shadow-md'
+                  : 'text-gray-500 hover:text-gray-700 hover:bg-white/40',
               )}
             >
               {tab === 'expenses' ? 'Expenses' : 'Balances'}
@@ -105,30 +107,14 @@ export default function Group() {
         {/* Tab content */}
         <div className="mt-4">
           {activeTab === 'expenses' && (
-            <>
-              <ExpenseList
-                expenses={expenses}
-                members={members}
-                currentMemberId={memberId}
-                currency={group.currency}
-                onEdit={handleEdit}
-                onDelete={deleteExpense}
-              />
-
-              {/* Floating add button */}
-              <div className="fixed bottom-6 right-6">
-                <Button
-                  size="lg"
-                  className="rounded-full shadow-lg px-6"
-                  onClick={() => {
-                    setEditingExpense(null)
-                    setExpenseDialogOpen(true)
-                  }}
-                >
-                  + Add Expense
-                </Button>
-              </div>
-            </>
+            <ExpenseList
+              expenses={expenses}
+              members={members}
+              currentMemberId={memberId}
+              currency={group.currency}
+              onEdit={handleEdit}
+              onDelete={deleteExpense}
+            />
           )}
 
           {activeTab === 'balances' && (
@@ -143,6 +129,22 @@ export default function Group() {
           )}
         </div>
       </div>
+
+      {/* Floating add button */}
+      {activeTab === 'expenses' && (
+        <div className="fixed bottom-6 right-6">
+          <Button
+            size="lg"
+            className="rounded-full shadow-fluent-lg px-7"
+            onClick={() => {
+              setEditingExpense(null)
+              setExpenseDialogOpen(true)
+            }}
+          >
+            + Add Expense
+          </Button>
+        </div>
+      )}
 
       {/* Expense Dialog */}
       <Dialog

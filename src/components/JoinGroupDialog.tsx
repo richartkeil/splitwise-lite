@@ -21,9 +21,9 @@ export function JoinGroupDialog({ open, groupName, onJoin }: JoinGroupDialogProp
 
   return (
     <Dialog open={open} onClose={() => {}} title={`Join ${groupName}`}>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <p className="text-sm text-gray-600">
-          Enter your name to join <span className="font-medium">{groupName}</span>
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <p className="text-sm text-gray-500 text-center">
+          Enter your name to join <span className="font-semibold text-gray-700">{groupName}</span>
         </p>
         <Input
           id="join-name"
