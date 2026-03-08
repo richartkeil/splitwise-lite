@@ -76,4 +76,21 @@ describe('ExpenseForm', () => {
 
     expect(onCancel).toHaveBeenCalledTimes(1)
   })
+
+  it('disables buttons and shows loading text when submitting', () => {
+    render(<ExpenseForm {...defaultProps} submitting={true} />)
+
+    const submitButton = screen.getByRole('button', { name: /wird gespeichert/i })
+    const cancelButton = screen.getByRole('button', { name: /abbrechen/i })
+
+    expect(submitButton).toBeDisabled()
+    expect(cancelButton).toBeDisabled()
+  })
+
+  it('enables buttons when not submitting', () => {
+    render(<ExpenseForm {...defaultProps} submitting={false} />)
+
+    const cancelButton = screen.getByRole('button', { name: /abbrechen/i })
+    expect(cancelButton).not.toBeDisabled()
+  })
 })

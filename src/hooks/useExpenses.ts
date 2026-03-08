@@ -47,13 +47,15 @@ export function useExpenses(groupId: string | undefined) {
         },
         (payload) => {
           if (payload.eventType === 'INSERT') {
-            setExpenses((prev) =>
-              [payload.new as Expense, ...prev].sort(
+            setExpenses((prev) => {
+              const newExpense = payload.new as Expense
+              if (prev.some((e) => e.id === newExpense.id)) return prev
+              return [newExpense, ...prev].sort(
                 (a, b) =>
                   new Date(b.created_at).getTime() -
                   new Date(a.created_at).getTime()
               )
-            )
+            })
           } else if (payload.eventType === 'UPDATE') {
             setExpenses((prev) =>
               prev.map((e) =>

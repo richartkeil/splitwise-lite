@@ -47,7 +47,11 @@ export function useSettlements(groupId: string | undefined) {
         },
         (payload) => {
           if (payload.eventType === 'INSERT') {
-            setSettlements((prev) => [payload.new as Settlement, ...prev])
+            setSettlements((prev) => {
+              const newSettlement = payload.new as Settlement
+              if (prev.some((s) => s.id === newSettlement.id)) return prev
+              return [newSettlement, ...prev]
+            })
           } else if (payload.eventType === 'UPDATE') {
             setSettlements((prev) =>
               prev.map((s) =>

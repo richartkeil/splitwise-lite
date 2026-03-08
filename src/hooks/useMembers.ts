@@ -47,7 +47,11 @@ export function useMembers(groupId: string | undefined) {
         },
         (payload) => {
           if (payload.eventType === 'INSERT') {
-            setMembers((prev) => [...prev, payload.new as Member])
+            setMembers((prev) => {
+              const newMember = payload.new as Member
+              if (prev.some((m) => m.id === newMember.id)) return prev
+              return [...prev, newMember]
+            })
           } else if (payload.eventType === 'UPDATE') {
             setMembers((prev) =>
               prev.map((m) =>

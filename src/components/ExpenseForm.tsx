@@ -17,6 +17,7 @@ type ExpenseFormProps = {
   onSubmit: (data: ExpenseFormData) => void
   onCancel: () => void
   initialData?: Expense
+  submitting?: boolean
 }
 
 export function ExpenseForm({
@@ -25,6 +26,7 @@ export function ExpenseForm({
   onSubmit,
   onCancel,
   initialData,
+  submitting,
 }: ExpenseFormProps) {
   const [description, setDescription] = useState(initialData?.description ?? '')
   const [amount, setAmount] = useState(initialData ? String(initialData.amount) : '')
@@ -138,11 +140,11 @@ export function ExpenseForm({
       </fieldset>
 
       <div className="flex gap-3 pt-2">
-        <Button type="button" variant="secondary" onClick={onCancel} className="flex-1">
+        <Button type="button" variant="secondary" onClick={onCancel} disabled={submitting} className="flex-1">
           Abbrechen
         </Button>
-        <Button type="submit" disabled={!isValid} className="flex-1">
-          {isEditing ? 'Ausgabe aktualisieren' : 'Ausgabe hinzufügen'}
+        <Button type="submit" disabled={!isValid || submitting} className="flex-1">
+          {submitting ? 'Wird gespeichert...' : isEditing ? 'Ausgabe aktualisieren' : 'Ausgabe hinzufügen'}
         </Button>
       </div>
     </form>

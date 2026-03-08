@@ -21,13 +21,15 @@ export default function Group() {
   const { slug } = useParams<{ slug: string }>()
   const { group, loading: groupLoading, error: groupError } = useGroup(slug ?? '')
   const { memberId, setIdentity } = useLocalIdentity(slug ?? '')
-  const { members, addMember } = useMembers(group?.id)
+  const { members, addMember, loading: membersLoading } = useMembers(group?.id)
   const { expenses, addExpense, updateExpense, deleteExpense } = useExpenses(group?.id)
   const { settlements, addSettlement } = useSettlements(group?.id)
 
   const [activeTab, setActiveTab] = useState<Tab>('expenses')
   const [expenseDialogOpen, setExpenseDialogOpen] = useState(false)
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [submitting, setSubmitting] = useState(false)
 
   if (groupLoading) {
     return (
@@ -52,17 +54,55 @@ export default function Group() {
     )
   }
 
-  if (!memberId) {
+  const memberExists = members.some(m => m.id === memberId)
+  const needsToJoin = !memberId || (memberId && !membersLoading && members.length >= 0 && !memberExists)
+
+  if (needsToJoin) {
     return (
       <JoinGroupDialog
         open
         groupName={group.name}
         onJoin={async (name) => {
-          const member = await addMember(name)
-          setIdentity(member.id, member.name)
+          setSubmitting(true)
+          try {
+            const member = await addMember(name)
+            setIdentity(member.id, member.name)
+          } catch (e) {
+            const msg = e instanceof Error ? e.message : 'Unbekannter Fehler'
+            setError(msg)
+            setTimeout(() => setError(null), 4000)
+          } finally {
+            setSubmitting(false)
+          }
         }}
       />
     )
+  }
+
+  async function handleDelete(expenseId: string) {
+    setSubmitting(true)
+    try {
+      await deleteExpense(expenseId)
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : 'Unbekannter Fehler'
+      setError(msg)
+      setTimeout(() => setError(null), 4000)
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  async function handleSettle(fromId: string, toId: string, amount: number) {
+    setSubmitting(true)
+    try {
+      await addSettlement(fromId, toId, amount)
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : 'Unbekannter Fehler'
+      setError(msg)
+      setTimeout(() => setError(null), 4000)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   function handleEdit(expense: Expense) {
@@ -113,7 +153,7 @@ export default function Group() {
               currentMemberId={memberId}
               currency={group.currency}
               onEdit={handleEdit}
-              onDelete={deleteExpense}
+              onDelete={handleDelete}
             />
           )}
 
@@ -124,7 +164,7 @@ export default function Group() {
               members={members}
               currentMemberId={memberId}
               currency={group.currency}
-              onSettle={addSettlement}
+              onSettle={handleSettle}
             />
           )}
         </div>
@@ -132,10 +172,11 @@ export default function Group() {
 
       {/* Floating add button */}
       {activeTab === 'expenses' && (
-        <div className="fixed bottom-6 right-6">
+        <div className="fixed bottom-6 left-0 right-0 flex justify-center pointer-events-none">
           <Button
             size="lg"
-            className="rounded-full shadow-fluent-lg px-7"
+            className="rounded-full shadow-fluent-lg px-7 pointer-events-auto"
+            disabled={submitting}
             onClick={() => {
               setEditingExpense(null)
               setExpenseDialogOpen(true)
@@ -143,6 +184,15 @@ export default function Group() {
           >
             + Ausgabe hinzufügen
           </Button>
+        </div>
+      )}
+
+      {/* Error banner */}
+      {error && (
+        <div className="fixed bottom-20 left-0 right-0 flex justify-center pointer-events-none z-50">
+          <div className="glass rounded-2xl shadow-fluent bg-red-500/10 border border-red-300/40 backdrop-blur-md px-6 py-3 pointer-events-auto max-w-lg mx-4">
+            <p className="text-sm font-medium text-red-700">{error}</p>
+          </div>
         </div>
       )}
 
@@ -156,14 +206,24 @@ export default function Group() {
           members={members}
           currentMemberId={memberId}
           initialData={editingExpense ?? undefined}
+          submitting={submitting}
           onCancel={handleCloseExpenseDialog}
           onSubmit={async (data) => {
-            if (editingExpense) {
-              await updateExpense(editingExpense.id, data)
-            } else {
-              await addExpense(data)
+            setSubmitting(true)
+            try {
+              if (editingExpense) {
+                await updateExpense(editingExpense.id, data)
+              } else {
+                await addExpense(data)
+              }
+              handleCloseExpenseDialog()
+            } catch (e) {
+              const msg = e instanceof Error ? e.message : 'Unbekannter Fehler'
+              setError(msg)
+              setTimeout(() => setError(null), 4000)
+            } finally {
+              setSubmitting(false)
             }
-            handleCloseExpenseDialog()
           }}
         />
       </Dialog>
