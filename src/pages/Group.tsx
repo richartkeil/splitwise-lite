@@ -33,7 +33,7 @@ export default function Group() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="glass rounded-2xl shadow-fluent px-8 py-6">
-          <p className="text-gray-500 text-lg font-medium">Loading group...</p>
+          <p className="text-gray-500 text-lg font-medium">Gruppe wird geladen...</p>
         </div>
       </div>
     )
@@ -43,9 +43,9 @@ export default function Group() {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="glass-strong rounded-3xl shadow-fluent-lg p-10 text-center max-w-sm">
-          <h2 className="text-2xl font-bold text-gray-800">Group not found</h2>
+          <h2 className="text-2xl font-bold text-gray-800">Gruppe nicht gefunden</h2>
           <p className="mt-3 text-gray-500">
-            This group doesn't exist or the link is invalid.
+            Diese Gruppe existiert nicht oder der Link ist ungültig.
           </p>
         </div>
       </div>
@@ -99,7 +99,7 @@ export default function Group() {
                   : 'text-gray-500 hover:text-gray-700 hover:bg-white/40',
               )}
             >
-              {tab === 'expenses' ? 'Expenses' : 'Balances'}
+              {tab === 'expenses' ? 'Ausgaben' : 'Salden'}
             </button>
           ))}
         </div>
@@ -141,7 +141,7 @@ export default function Group() {
               setExpenseDialogOpen(true)
             }}
           >
-            + Add Expense
+            + Ausgabe hinzufügen
           </Button>
         </div>
       )}
@@ -150,7 +150,7 @@ export default function Group() {
       <Dialog
         open={expenseDialogOpen}
         onClose={handleCloseExpenseDialog}
-        title={editingExpense ? 'Edit Expense' : 'Add Expense'}
+        title={editingExpense ? 'Ausgabe bearbeiten' : 'Ausgabe hinzufügen'}
       >
         <ExpenseForm
           members={members}

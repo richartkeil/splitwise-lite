@@ -20,22 +20,22 @@ export function JoinGroupDialog({ open, groupName, onJoin }: JoinGroupDialogProp
   }
 
   return (
-    <Dialog open={open} onClose={() => {}} title={`Join ${groupName}`}>
+    <Dialog open={open} onClose={() => {}} title={`${groupName} beitreten`}>
       <form onSubmit={handleSubmit} className="space-y-5">
         <p className="text-sm text-gray-500 text-center">
-          Enter your name to join <span className="font-semibold text-gray-700">{groupName}</span>
+          Gib deinen Namen ein, um <span className="font-semibold text-gray-700">{groupName}</span> beizutreten
         </p>
         <Input
           id="join-name"
-          label="Your name"
-          placeholder="e.g. Alex"
+          label="Dein Name"
+          placeholder="z.B. Alex"
           value={name}
           onChange={(e) => setName(e.target.value)}
           autoFocus
           required
         />
         <Button type="submit" className="w-full" disabled={!name.trim()}>
-          Join
+          Beitreten
         </Button>
       </form>
     </Dialog>

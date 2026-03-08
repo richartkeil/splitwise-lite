@@ -31,14 +31,14 @@ export default function Landing() {
           Splitwise Lite
         </h1>
         <p className="mt-3 text-lg text-gray-500 font-medium">
-          Split expenses with friends. No account needed.
+          Teile Ausgaben mit Freunden. Kein Account nötig.
         </p>
 
         <div className="glass-strong rounded-3xl shadow-fluent-lg p-8 mt-8">
           <form onSubmit={handleSubmit} className="space-y-5">
             <Input
               id="group-name"
-              placeholder="Group name, e.g. Summer Trip"
+              placeholder="Gruppenname, z.B. Sommerurlaub"
               value={groupName}
               onChange={(e) => setGroupName(e.target.value)}
               required
@@ -49,7 +49,7 @@ export default function Landing() {
               size="lg"
               disabled={!groupName.trim() || submitting}
             >
-              {submitting ? 'Creating...' : 'Create Group'}
+              {submitting ? 'Wird erstellt...' : 'Gruppe erstellen'}
             </Button>
           </form>
         </div>

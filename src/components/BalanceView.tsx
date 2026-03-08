@@ -14,7 +14,7 @@ type BalanceViewProps = {
 }
 
 function getMemberName(members: Member[], id: string): string {
-  return members.find((m) => m.id === id)?.name ?? 'Unknown'
+  return members.find((m) => m.id === id)?.name ?? 'Unbekannt'
 }
 
 export function BalanceView({
@@ -33,7 +33,7 @@ export function BalanceView({
       {/* Net balances per person */}
       <div>
         <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
-          Net Balances
+          Salden
         </h3>
         <div className="grid grid-cols-2 gap-3">
           {members.map((member, index) => {
@@ -51,7 +51,7 @@ export function BalanceView({
                 <div className="flex items-center gap-2.5 mb-2">
                   <p className={cn('text-sm truncate', isCurrentUser ? 'font-bold text-gray-800' : 'font-semibold text-gray-600')}>
                     {member.name}
-                    {isCurrentUser ? ' (you)' : ''}
+                    {isCurrentUser ? ' (du)' : ''}
                   </p>
                 </div>
                 <p
@@ -64,8 +64,8 @@ export function BalanceView({
                 >
                   {balance > 0 && '+'}
                   {formatCurrency(Math.abs(balance), currency)}
-                  {balance < 0 && ' owed'}
-                  {balance > 0 && ' owed to'}
+                  {balance < 0 && ' schuldet'}
+                  {balance > 0 && ' bekommt'}
                 </p>
               </Card>
             )
@@ -76,12 +76,12 @@ export function BalanceView({
       {/* Simplified debts */}
       <div>
         <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
-          Settlements Needed
+          Ausgleich nötig
         </h3>
         {debts.length === 0 ? (
           <Card className="py-10 text-center">
-            <p className="text-xl font-bold text-emerald-500">All settled up!</p>
-            <p className="text-sm text-gray-400 mt-1.5">No outstanding debts.</p>
+            <p className="text-xl font-bold text-emerald-500">Alles ausgeglichen!</p>
+            <p className="text-sm text-gray-400 mt-1.5">Keine offenen Schulden.</p>
           </Card>
         ) : (
           <div className="space-y-3">
@@ -90,11 +90,11 @@ export function BalanceView({
                 debt.from === currentMemberId || debt.to === currentMemberId
               const fromName =
                 debt.from === currentMemberId
-                  ? 'You'
+                  ? 'Du'
                   : getMemberName(members, debt.from)
               const toName =
                 debt.to === currentMemberId
-                  ? 'you'
+                  ? 'dir'
                   : getMemberName(members, debt.to)
 
               return (
@@ -108,7 +108,7 @@ export function BalanceView({
                   <div className="flex items-center justify-between gap-3">
                     <p className="text-sm">
                       <span className="font-semibold text-gray-700">{fromName}</span>
-                      {' owes '}
+                      {' schuldet '}
                       <span className="font-semibold text-gray-700">{toName}</span>
                       {' '}
                       <span className="font-bold text-gray-800">
@@ -120,7 +120,7 @@ export function BalanceView({
                       size="sm"
                       onClick={() => onSettle(debt.from, debt.to, debt.amount)}
                     >
-                      Settle
+                      Ausgleichen
                     </Button>
                   </div>
                 </Card>

@@ -22,7 +22,7 @@ describe('ExpenseForm', () => {
     render(<ExpenseForm {...defaultProps} />)
 
     // Payer select should default to current user
-    const payerSelect = screen.getByLabelText('Paid by') as HTMLSelectElement
+    const payerSelect = screen.getByLabelText('Bezahlt von') as HTMLSelectElement
     expect(payerSelect.value).toBe('member-1')
 
     // All member checkboxes should be checked
@@ -38,10 +38,10 @@ describe('ExpenseForm', () => {
     const onSubmit = vi.fn()
     render(<ExpenseForm {...defaultProps} onSubmit={onSubmit} />)
 
-    await user.type(screen.getByLabelText('Description'), 'Lunch')
-    await user.type(screen.getByLabelText('Amount'), '24.50')
+    await user.type(screen.getByLabelText('Beschreibung'), 'Lunch')
+    await user.type(screen.getByLabelText('Betrag'), '24.50')
 
-    await user.click(screen.getByRole('button', { name: /add expense/i }))
+    await user.click(screen.getByRole('button', { name: /ausgabe hinzufügen/i }))
 
     expect(onSubmit).toHaveBeenCalledTimes(1)
     expect(onSubmit).toHaveBeenCalledWith({
@@ -58,9 +58,9 @@ describe('ExpenseForm', () => {
     render(<ExpenseForm {...defaultProps} onSubmit={onSubmit} />)
 
     // Only fill amount, leave description empty
-    await user.type(screen.getByLabelText('Amount'), '10')
+    await user.type(screen.getByLabelText('Betrag'), '10')
 
-    const submitButton = screen.getByRole('button', { name: /add expense/i })
+    const submitButton = screen.getByRole('button', { name: /ausgabe hinzufügen/i })
     expect(submitButton).toBeDisabled()
 
     await user.click(submitButton)
@@ -72,7 +72,7 @@ describe('ExpenseForm', () => {
     const onCancel = vi.fn()
     render(<ExpenseForm {...defaultProps} onCancel={onCancel} />)
 
-    await user.click(screen.getByRole('button', { name: /cancel/i }))
+    await user.click(screen.getByRole('button', { name: /abbrechen/i }))
 
     expect(onCancel).toHaveBeenCalledTimes(1)
   })

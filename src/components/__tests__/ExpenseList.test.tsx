@@ -42,7 +42,7 @@ const defaultProps = {
 describe('ExpenseList', () => {
   it('shows empty message when there are no expenses', () => {
     render(<ExpenseList {...defaultProps} expenses={[]} />)
-    expect(screen.getByText('No expenses yet')).toBeInTheDocument()
+    expect(screen.getByText('Noch keine Ausgaben')).toBeInTheDocument()
   })
 
   it('renders expense descriptions and payer names', () => {
@@ -50,8 +50,8 @@ describe('ExpenseList', () => {
 
     expect(screen.getByText('Dinner')).toBeInTheDocument()
     expect(screen.getByText('Groceries')).toBeInTheDocument()
-    // member-1 is current user, so "Dinner" paid by "you"
-    expect(screen.getAllByText(/you/i).length).toBeGreaterThan(0)
+    // member-1 is current user, so "Dinner" paid by "dir"
+    expect(screen.getAllByText(/dir/i).length).toBeGreaterThan(0)
     // member-2 paid Groceries → shows "Bob"
     expect(screen.getByText('Bob')).toBeInTheDocument()
   })
@@ -69,7 +69,7 @@ describe('ExpenseList', () => {
     const onEdit = vi.fn()
     render(<ExpenseList {...defaultProps} expenses={expenses} onEdit={onEdit} />)
 
-    const editButtons = screen.getAllByRole('button', { name: /edit expense/i })
+    const editButtons = screen.getAllByRole('button', { name: /ausgabe bearbeiten/i })
     await user.click(editButtons[0])
 
     expect(onEdit).toHaveBeenCalledTimes(1)
@@ -81,7 +81,7 @@ describe('ExpenseList', () => {
     const onDelete = vi.fn()
     render(<ExpenseList {...defaultProps} expenses={expenses} onDelete={onDelete} />)
 
-    const deleteButtons = screen.getAllByRole('button', { name: /delete expense/i })
+    const deleteButtons = screen.getAllByRole('button', { name: /ausgabe löschen/i })
     await user.click(deleteButtons[1])
 
     expect(onDelete).toHaveBeenCalledTimes(1)

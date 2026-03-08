@@ -68,8 +68,8 @@ export function ExpenseForm({
     <form onSubmit={handleSubmit} className="space-y-5">
       <Input
         id="expense-description"
-        label="Description"
-        placeholder="e.g. Dinner, Groceries"
+        label="Beschreibung"
+        placeholder="z.B. Abendessen, Einkauf"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         required
@@ -78,7 +78,7 @@ export function ExpenseForm({
 
       <Input
         id="expense-amount"
-        label="Amount"
+        label="Betrag"
         type="number"
         placeholder="0.00"
         min="0.01"
@@ -90,7 +90,7 @@ export function ExpenseForm({
 
       <div>
         <label htmlFor="expense-paid-by" className="block text-sm font-semibold text-gray-600 mb-1.5">
-          Paid by
+          Bezahlt von
         </label>
         <select
           id="expense-paid-by"
@@ -101,7 +101,7 @@ export function ExpenseForm({
           {members.map((member) => (
             <option key={member.id} value={member.id}>
               {member.name}
-              {member.id === currentMemberId ? ' (you)' : ''}
+              {member.id === currentMemberId ? ' (du)' : ''}
             </option>
           ))}
         </select>
@@ -109,7 +109,7 @@ export function ExpenseForm({
 
       <fieldset>
         <legend className="block text-sm font-semibold text-gray-600 mb-2">
-          Split among
+          Aufteilen auf
         </legend>
         <div className="space-y-2">
           {members.map((member, index) => (
@@ -130,7 +130,7 @@ export function ExpenseForm({
               />
               <span className="text-sm font-medium text-gray-700">
                 {member.name}
-                {member.id === currentMemberId ? ' (you)' : ''}
+                {member.id === currentMemberId ? ' (du)' : ''}
               </span>
             </label>
           ))}
@@ -139,10 +139,10 @@ export function ExpenseForm({
 
       <div className="flex gap-3 pt-2">
         <Button type="button" variant="secondary" onClick={onCancel} className="flex-1">
-          Cancel
+          Abbrechen
         </Button>
         <Button type="submit" disabled={!isValid} className="flex-1">
-          {isEditing ? 'Update Expense' : 'Add Expense'}
+          {isEditing ? 'Ausgabe aktualisieren' : 'Ausgabe hinzufügen'}
         </Button>
       </div>
     </form>

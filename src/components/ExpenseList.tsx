@@ -13,11 +13,11 @@ type ExpenseListProps = {
 }
 
 function getMemberName(members: Member[], id: string): string {
-  return members.find((m) => m.id === id)?.name ?? 'Unknown'
+  return members.find((m) => m.id === id)?.name ?? 'Unbekannt'
 }
 
 function formatSplitAmong(members: Member[], splitAmong: string[]): string {
-  if (splitAmong.length === members.length) return 'everyone'
+  if (splitAmong.length === members.length) return 'alle'
   return splitAmong.map((id) => getMemberName(members, id)).join(', ')
 }
 
@@ -39,8 +39,8 @@ export function ExpenseList({
   if (expenses.length === 0) {
     return (
       <Card className="text-center py-14">
-        <p className="text-lg font-semibold text-gray-400">No expenses yet</p>
-        <p className="text-sm mt-1.5 text-gray-400">Add your first expense to get started.</p>
+        <p className="text-lg font-semibold text-gray-400">Noch keine Ausgaben</p>
+        <p className="text-sm mt-1.5 text-gray-400">Füge deine erste Ausgabe hinzu.</p>
       </Card>
     )
   }
@@ -72,14 +72,14 @@ export function ExpenseList({
                   {formatCurrency(expense.amount, currency)}
                 </p>
                 <p className="text-sm text-gray-500 mt-1">
-                  Paid by{' '}
+                  Bezahlt von{' '}
                   <span className="font-semibold text-gray-600">
                     {paidByCurrentUser
-                      ? 'you'
+                      ? 'dir'
                       : getMemberName(members, expense.paid_by)}
                   </span>
                   {' · '}
-                  Split among{' '}
+                  Aufgeteilt auf{' '}
                   <span className="font-semibold text-gray-600">
                     {formatSplitAmong(members, expense.split_among)}
                   </span>
@@ -90,18 +90,18 @@ export function ExpenseList({
                   variant="ghost"
                   size="sm"
                   onClick={() => onEdit(expense)}
-                  aria-label="Edit expense"
+                  aria-label="Ausgabe bearbeiten"
                 >
-                  Edit
+                  Bearbeiten
                 </Button>
                 <Button
                   variant="ghost"
                   size="sm"
                   className="text-red-500 hover:text-red-600 hover:bg-red-50/50"
                   onClick={() => onDelete(expense.id)}
-                  aria-label="Delete expense"
+                  aria-label="Ausgabe löschen"
                 >
-                  Delete
+                  Löschen
                 </Button>
               </div>
             </div>

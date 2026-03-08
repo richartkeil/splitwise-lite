@@ -27,7 +27,7 @@ describe('BalanceView', () => {
       />,
     )
 
-    expect(screen.getByText('All settled up!')).toBeInTheDocument()
+    expect(screen.getByText('Alles ausgeglichen!')).toBeInTheDocument()
   })
 
   it('shows debt information when there are expenses', () => {
@@ -52,7 +52,7 @@ describe('BalanceView', () => {
     )
 
     // Should show owes text for the debts
-    expect(screen.getAllByText(/owes/i).length).toBeGreaterThan(0)
+    expect(screen.getAllByText(/schuldet/i).length).toBeGreaterThan(0)
     // Bob and Charlie appear in the view (in balances and debts sections)
     expect(screen.getAllByText('Bob').length).toBeGreaterThan(0)
     expect(screen.getAllByText('Charlie').length).toBeGreaterThan(0)
@@ -83,7 +83,7 @@ describe('BalanceView', () => {
       />,
     )
 
-    const settleButtons = screen.getAllByRole('button', { name: /settle/i })
+    const settleButtons = screen.getAllByRole('button', { name: /ausgleichen/i })
     await user.click(settleButtons[0])
 
     expect(onSettle).toHaveBeenCalledTimes(1)
