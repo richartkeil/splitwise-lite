@@ -70,6 +70,39 @@ describe('computeBalances', () => {
     expect(balances['member-3']).toBeCloseTo(-15)
   })
 
+  it('ignores deleted members when memberIds are provided', () => {
+    const expense = makeExpense({
+      paid_by: 'member-1',
+      amount: 30,
+      split_among: ['member-1', 'member-2', 'deleted-member'],
+    })
+
+    const balances = computeBalances([expense], [], ['member-1', 'member-2'])
+
+    // deleted-member is filtered out, so split is between member-1 and member-2
+    // member-1: +30 - 15 = +15
+    // member-2: -15
+    expect(balances['member-1']).toBeCloseTo(15)
+    expect(balances['member-2']).toBeCloseTo(-15)
+    expect(balances['deleted-member']).toBeUndefined()
+  })
+
+  it('skips expense if payer is deleted', () => {
+    const expense = makeExpense({
+      paid_by: 'deleted-member',
+      amount: 30,
+      split_among: ['member-1', 'member-2', 'deleted-member'],
+    })
+
+    const balances = computeBalances([expense], [], ['member-1', 'member-2'])
+
+    // Payer is deleted, so they don't get credit
+    // But active members in split_among still owe their share
+    // split is between member-1 and member-2 (2 active members)
+    expect(balances['member-1']).toBeCloseTo(-15)
+    expect(balances['member-2']).toBeCloseTo(-15)
+  })
+
   it('accounts for settlements reducing debts', () => {
     const expense = makeExpense({
       paid_by: 'member-1',

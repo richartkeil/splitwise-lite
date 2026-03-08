@@ -23,7 +23,7 @@ export default function Group() {
   const { memberId, setIdentity } = useLocalIdentity(slug ?? '')
   const { members, addMember, loading: membersLoading } = useMembers(group?.id)
   const { expenses, addExpense, updateExpense, deleteExpense } = useExpenses(group?.id)
-  const { settlements, addSettlement } = useSettlements(group?.id)
+  const { settlements, addSettlement, deleteSettlement } = useSettlements(group?.id)
 
   const [activeTab, setActiveTab] = useState<Tab>('expenses')
   const [expenseDialogOpen, setExpenseDialogOpen] = useState(false)
@@ -55,7 +55,7 @@ export default function Group() {
   }
 
   const memberExists = members.some(m => m.id === memberId)
-  const needsToJoin = !memberId || (memberId && !membersLoading && members.length >= 0 && !memberExists)
+  const needsToJoin = !memberId || (memberId && !membersLoading && members.length > 0 && !memberExists)
 
   if (needsToJoin) {
     return (
@@ -96,6 +96,19 @@ export default function Group() {
     setSubmitting(true)
     try {
       await addSettlement(fromId, toId, amount)
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : 'Unbekannter Fehler'
+      setError(msg)
+      setTimeout(() => setError(null), 4000)
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  async function handleDeleteSettlement(settlementId: string) {
+    setSubmitting(true)
+    try {
+      await deleteSettlement(settlementId)
     } catch (e) {
       const msg = e instanceof Error ? e.message : 'Unbekannter Fehler'
       setError(msg)
@@ -165,6 +178,7 @@ export default function Group() {
               currentMemberId={memberId}
               currency={group.currency}
               onSettle={handleSettle}
+              onDeleteSettlement={handleDeleteSettlement}
             />
           )}
         </div>

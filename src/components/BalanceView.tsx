@@ -11,6 +11,7 @@ type BalanceViewProps = {
   currentMemberId: string
   currency: string
   onSettle: (from: string, to: string, amount: number) => void
+  onDeleteSettlement: (settlementId: string) => void
 }
 
 function getMemberName(members: Member[], id: string): string {
@@ -24,8 +25,10 @@ export function BalanceView({
   currentMemberId,
   currency,
   onSettle,
+  onDeleteSettlement,
 }: BalanceViewProps) {
-  const balances = computeBalances(expenses, settlements)
+  const memberIds = members.map((m) => m.id)
+  const balances = computeBalances(expenses, settlements, memberIds)
   const debts = simplifyDebts(balances)
 
   return (
@@ -129,6 +132,38 @@ export function BalanceView({
           </div>
         )}
       </div>
+      {/* Past settlements */}
+      {settlements.length > 0 && (
+        <div>
+          <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+            Bisherige Ausgleiche
+          </h3>
+          <div className="space-y-2">
+            {settlements.map((s) => (
+              <Card key={s.id} className="p-3">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-sm text-gray-600">
+                    <span className="font-semibold">{getMemberName(members, s.from_member)}</span>
+                    {' an '}
+                    <span className="font-semibold">{getMemberName(members, s.to_member)}</span>
+                    {' '}
+                    <span className="font-bold text-gray-800">{formatCurrency(s.amount, currency)}</span>
+                  </p>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-red-500 hover:text-red-600 hover:bg-red-50/50"
+                    onClick={() => onDeleteSettlement(s.id)}
+                    aria-label="Ausgleich löschen"
+                  >
+                    Löschen
+                  </Button>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

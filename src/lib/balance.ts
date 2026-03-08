@@ -2,18 +2,29 @@ import type { Expense, Settlement } from './types'
 
 export function computeBalances(
   expenses: Expense[],
-  settlements: Settlement[]
+  settlements: Settlement[],
+  memberIds?: string[]
 ): Record<string, number> {
   const balances: Record<string, number> = {}
+  const validMembers = memberIds ? new Set(memberIds) : null
 
   for (const expense of expenses) {
-    const share = expense.amount / expense.split_among.length
+    // Filter split_among to only include existing members
+    const activeSplit = validMembers
+      ? expense.split_among.filter((id) => validMembers.has(id))
+      : expense.split_among
 
-    // The payer is owed money
-    balances[expense.paid_by] = (balances[expense.paid_by] ?? 0) + expense.amount
+    if (activeSplit.length === 0) continue
 
-    // Each participant owes their share
-    for (const memberId of expense.split_among) {
+    const share = expense.amount / activeSplit.length
+
+    // Only count the payer if they still exist
+    if (!validMembers || validMembers.has(expense.paid_by)) {
+      balances[expense.paid_by] = (balances[expense.paid_by] ?? 0) + expense.amount
+    }
+
+    // Each active participant owes their share
+    for (const memberId of activeSplit) {
       balances[memberId] = (balances[memberId] ?? 0) - share
     }
   }

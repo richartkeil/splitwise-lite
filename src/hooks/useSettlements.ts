@@ -99,5 +99,10 @@ export function useSettlements(groupId: string | undefined) {
     return data as unknown as Settlement
   }
 
-  return { settlements, addSettlement, loading }
+  const deleteSettlement = async (id: string): Promise<void> => {
+    const { error } = await supabase.from('settlements').delete().eq('id', id)
+    if (error) throw error
+  }
+
+  return { settlements, addSettlement, deleteSettlement, loading }
 }

@@ -15,6 +15,7 @@ const defaultProps = {
   currentMemberId: 'member-1',
   currency: 'EUR',
   onSettle: vi.fn(),
+  onDeleteSettlement: vi.fn(),
 }
 
 describe('BalanceView', () => {
@@ -92,5 +93,67 @@ describe('BalanceView', () => {
     expect(typeof from).toBe('string')
     expect(typeof to).toBe('string')
     expect(amount).toBeCloseTo(10)
+  })
+
+  it('shows past settlements with delete button', async () => {
+    const user = userEvent.setup()
+    const onDeleteSettlement = vi.fn()
+
+    const settlements: Settlement[] = [
+      {
+        id: 'settlement-1',
+        group_id: 'group-1',
+        from_member: 'member-2',
+        to_member: 'member-1',
+        amount: 10,
+        created_at: '2026-01-20T00:00:00Z',
+      },
+    ]
+
+    render(
+      <BalanceView
+        {...defaultProps}
+        expenses={[]}
+        settlements={settlements}
+        onDeleteSettlement={onDeleteSettlement}
+      />,
+    )
+
+    expect(screen.getByText(/Bisherige Ausgleiche/i)).toBeInTheDocument()
+    const deleteButton = screen.getByRole('button', { name: /ausgleich löschen/i })
+    await user.click(deleteButton)
+
+    expect(onDeleteSettlement).toHaveBeenCalledWith('settlement-1')
+  })
+
+  it('ignores deleted members in balance calculation', () => {
+    const expenses: Expense[] = [
+      {
+        id: 'expense-1',
+        group_id: 'group-1',
+        paid_by: 'member-1',
+        description: 'Dinner',
+        amount: 30,
+        split_among: ['member-1', 'member-2', 'deleted-member'],
+        created_at: '2026-01-15T00:00:00Z',
+      },
+    ]
+
+    // Only member-1 and member-2 exist (deleted-member is gone)
+    const activeMembers = members.slice(0, 2)
+
+    render(
+      <BalanceView
+        {...defaultProps}
+        members={activeMembers}
+        expenses={expenses}
+        settlements={[]}
+      />,
+    )
+
+    // Should not crash and should show balances only for active members
+    expect(screen.getAllByText(/Alice/).length).toBeGreaterThan(0)
+    expect(screen.getAllByText(/Bob/).length).toBeGreaterThan(0)
+    expect(screen.queryByText('Unbekannt')).not.toBeInTheDocument()
   })
 })
