@@ -1,8 +1,38 @@
+import { useMemo } from 'react'
 import type { Expense, Settlement, Member } from '@/lib/types'
 import { computeBalances, simplifyDebts } from '@/lib/balance'
 import { cn, formatCurrency } from '@/lib/utils'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
+
+const funnyOwesYou = [
+  (name: React.ReactNode, amount: React.ReactNode) => <>{name} hat {amount} bei dir auf dem Deckel</>,
+  (name: React.ReactNode, amount: React.ReactNode) => <>{name} drückt sich bei dir um {amount}</>,
+  (name: React.ReactNode, amount: React.ReactNode) => <>{name} muss noch {amount} rausrücken</>,
+  (name: React.ReactNode, amount: React.ReactNode) => <>{name} ist {amount} bei dir in der Kreide</>,
+  (name: React.ReactNode, amount: React.ReactNode) => <>{name} pumpt {amount} von dir</>,
+  (name: React.ReactNode, amount: React.ReactNode) => <>{name} fährt {amount} Miese bei dir</>,
+  (name: React.ReactNode, amount: React.ReactNode) => <>{name} schnorrt {amount} von dir</>,
+]
+
+const funnyYouOwe = [
+  (name: React.ReactNode, amount: React.ReactNode) => <>Du hast {amount} bei {name} auf dem Deckel</>,
+  (name: React.ReactNode, amount: React.ReactNode) => <>Du drückst dich bei {name} um {amount}</>,
+  (name: React.ReactNode, amount: React.ReactNode) => <>Du musst noch {amount} an {name} rausrücken</>,
+  (name: React.ReactNode, amount: React.ReactNode) => <>Du bist {amount} bei {name} in der Kreide</>,
+  (name: React.ReactNode, amount: React.ReactNode) => <>Du pumpst {amount} von {name}</>,
+  (name: React.ReactNode, amount: React.ReactNode) => <>Du fährst {amount} Miese bei {name}</>,
+  (name: React.ReactNode, amount: React.ReactNode) => <>Du schnorrst {amount} von {name}</>,
+]
+
+function stableHash(a: string, b: string): number {
+  const str = a + b
+  let hash = 0
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash + str.charCodeAt(i)) | 0
+  }
+  return Math.abs(hash)
+}
 
 type BalanceViewProps = {
   expenses: Expense[]
@@ -99,13 +129,18 @@ export function BalanceView({
               const fromName = getMemberName(members, debt.from)
               const toName = getMemberName(members, debt.to)
 
+              const idx = stableHash(debt.from, debt.to) % funnyOwesYou.length
+              const nameClass = "font-semibold text-gray-700"
+              const amountClass = "font-bold text-gray-800"
+              const amountNode = <span className={amountClass}>{formatCurrency(debt.amount, currency)}</span>
+
               let debtText: React.ReactNode
               if (fromIsMe) {
-                debtText = <>Du schuldest <span className="font-semibold text-gray-700">{toName}</span></>
+                debtText = funnyYouOwe[idx](<span className={nameClass}>{toName}</span>, amountNode)
               } else if (toIsMe) {
-                debtText = <><span className="font-semibold text-gray-700">{fromName}</span> schuldet dir</>
+                debtText = funnyOwesYou[idx](<span className={nameClass}>{fromName}</span>, amountNode)
               } else {
-                debtText = <><span className="font-semibold text-gray-700">{fromName}</span> schuldet <span className="font-semibold text-gray-700">{toName}</span></>
+                debtText = <><span className={nameClass}>{fromName}</span> schuldet <span className={nameClass}>{toName}</span> {amountNode}</>
               }
 
               return (
@@ -119,10 +154,6 @@ export function BalanceView({
                   <div className="flex items-center justify-between gap-3">
                     <p className="text-sm">
                       {debtText}
-                      {' '}
-                      <span className="font-bold text-gray-800">
-                        {formatCurrency(debt.amount, currency)}
-                      </span>
                     </p>
                     <Button
                       variant="secondary"

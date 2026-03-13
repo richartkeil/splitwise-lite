@@ -5,7 +5,7 @@ import Group from '@/pages/Group'
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen">
+      <div>
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/g/:slug" element={<Group />} />

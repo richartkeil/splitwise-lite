@@ -136,8 +136,8 @@ export default function Group() {
   }
 
   return (
-    <div className="min-h-screen pb-24">
-      <div className="max-w-lg mx-auto px-4 py-6">
+    <>
+      <div className="min-h-dvh max-w-lg mx-auto px-4 py-6 pb-24">
         {/* Header */}
         <div className="glass-strong rounded-2xl shadow-fluent px-6 py-5">
           <h1 className="text-2xl font-bold text-gray-800">{group.name}</h1>
@@ -197,7 +197,7 @@ export default function Group() {
         </div>
       </div>
 
-      {/* Floating add button */}
+      {/* Floating add button - outside content wrapper to avoid backdrop-filter breaking fixed on iOS */}
       {activeTab === 'expenses' && (
         <div className="fixed bottom-6 left-0 right-0 flex justify-center pointer-events-none">
           <Button
@@ -254,6 +254,6 @@ export default function Group() {
           }}
         />
       </Dialog>
-    </div>
+    </>
   )
 }
