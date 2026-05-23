@@ -121,6 +121,17 @@ export function ExpenseList({
                 <p className="text-lg font-bold text-gray-800 mt-0.5">
                   {formatCurrency(expense.amount, currency)}
                 </p>
+                {expense.original_currency &&
+                  expense.original_currency !== currency &&
+                  expense.original_amount != null && (
+                    <p className="text-xs text-gray-400 mt-0.5">
+                      ursprünglich{' '}
+                      {formatCurrency(
+                        expense.original_amount,
+                        expense.original_currency,
+                      )}
+                    </p>
+                  )}
                 <p className="text-sm text-gray-500 mt-1">
                   Bezahlt von{' '}
                   <span className="font-semibold text-gray-600">

@@ -18,6 +18,9 @@ const expenses: Expense[] = [
     description: 'Dinner',
     amount: 45,
     split_among: ['member-1', 'member-2', 'member-3'],
+    original_amount: null,
+    original_currency: null,
+    exchange_rate: null,
     created_at: '2026-01-15T00:00:00Z',
   },
   {
@@ -27,6 +30,9 @@ const expenses: Expense[] = [
     description: 'Groceries',
     amount: 30,
     split_among: ['member-1', 'member-2'],
+    original_amount: null,
+    original_currency: null,
+    exchange_rate: null,
     created_at: '2026-01-16T00:00:00Z',
   },
 ]
@@ -72,6 +78,31 @@ describe('ExpenseList', () => {
 
     expect(onEdit).toHaveBeenCalledTimes(1)
     expect(onEdit).toHaveBeenCalledWith(expenses[0])
+  })
+
+  it('shows original currency for converted expenses', () => {
+    const fxExpense: Expense = {
+      id: 'expense-fx',
+      group_id: 'group-1',
+      paid_by: 'member-1',
+      description: 'Hotel',
+      amount: 92,
+      split_among: ['member-1', 'member-2'],
+      original_amount: 100,
+      original_currency: 'USD',
+      exchange_rate: 0.92,
+      created_at: '2026-01-17T00:00:00Z',
+    }
+    render(<ExpenseList {...defaultProps} expenses={[fxExpense]} />)
+
+    expect(screen.getByText(/ursprünglich/i)).toBeInTheDocument()
+    // formatCurrency renders e.g. "$100.00" — assert the dollar sign + 100 appears
+    expect(screen.getByText(/\$.*100/)).toBeInTheDocument()
+  })
+
+  it('omits original-currency line when amount was entered in group currency', () => {
+    render(<ExpenseList {...defaultProps} expenses={expenses} />)
+    expect(screen.queryByText(/ursprünglich/i)).not.toBeInTheDocument()
   })
 
   it('calls onDelete when delete option is clicked via menu', async () => {

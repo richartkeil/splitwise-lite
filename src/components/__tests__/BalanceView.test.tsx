@@ -40,6 +40,9 @@ describe('BalanceView', () => {
         description: 'Dinner',
         amount: 30,
         split_among: ['member-1', 'member-2', 'member-3'],
+        original_amount: null,
+        original_currency: null,
+        exchange_rate: null,
         created_at: '2026-01-15T00:00:00Z',
       },
     ]
@@ -71,6 +74,9 @@ describe('BalanceView', () => {
         description: 'Dinner',
         amount: 30,
         split_among: ['member-1', 'member-2', 'member-3'],
+        original_amount: null,
+        original_currency: null,
+        exchange_rate: null,
         created_at: '2026-01-15T00:00:00Z',
       },
     ]
@@ -135,6 +141,9 @@ describe('BalanceView', () => {
         description: 'Dinner',
         amount: 30,
         split_among: ['member-1', 'member-2', 'deleted-member'],
+        original_amount: null,
+        original_currency: null,
+        exchange_rate: null,
         created_at: '2026-01-15T00:00:00Z',
       },
     ]

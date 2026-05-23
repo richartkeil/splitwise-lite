@@ -232,6 +232,7 @@ export default function Group() {
         <ExpenseForm
           members={members}
           currentMemberId={memberId}
+          groupCurrency={group.currency}
           initialData={editingExpense ?? undefined}
           submitting={submitting}
           onCancel={handleCloseExpenseDialog}

@@ -13,6 +13,7 @@ const members: Member[] = [
 const defaultProps = {
   members,
   currentMemberId: 'member-1',
+  groupCurrency: 'EUR',
   onSubmit: vi.fn(),
   onCancel: vi.fn(),
 }
@@ -49,6 +50,9 @@ describe('ExpenseForm', () => {
       amount: 24.5,
       paid_by: 'member-1',
       split_among: ['member-1', 'member-2', 'member-3'],
+      original_amount: null,
+      original_currency: null,
+      exchange_rate: null,
     })
   })
 

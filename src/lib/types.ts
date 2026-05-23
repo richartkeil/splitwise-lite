@@ -62,6 +62,9 @@ export type Database = {
           description: string
           amount: number
           split_among: string[]
+          original_amount: number | null
+          original_currency: string | null
+          exchange_rate: number | null
           created_at: string
         }
         Insert: {
@@ -71,6 +74,9 @@ export type Database = {
           description: string
           amount: number
           split_among: string[]
+          original_amount?: number | null
+          original_currency?: string | null
+          exchange_rate?: number | null
           created_at?: string
         }
         Update: {
@@ -80,6 +86,9 @@ export type Database = {
           description?: string
           amount?: number
           split_among?: string[]
+          original_amount?: number | null
+          original_currency?: string | null
+          exchange_rate?: number | null
           created_at?: string
         }
         Relationships: [

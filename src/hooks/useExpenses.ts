@@ -86,6 +86,9 @@ export function useExpenses(groupId: string | undefined) {
     description: string
     amount: number
     split_among: string[]
+    original_amount?: number | null
+    original_currency?: string | null
+    exchange_rate?: number | null
   }): Promise<Expense> => {
     if (!groupId) throw new Error('No group ID')
 
@@ -106,6 +109,9 @@ export function useExpenses(groupId: string | undefined) {
       description?: string
       amount?: number
       split_among?: string[]
+      original_amount?: number | null
+      original_currency?: string | null
+      exchange_rate?: number | null
     }
   ): Promise<Expense> => {
     const { data: expense, error } = await supabase

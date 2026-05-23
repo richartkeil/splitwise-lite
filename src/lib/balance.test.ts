@@ -7,6 +7,9 @@ function makeExpense(overrides: Partial<Expense> & Pick<Expense, 'paid_by' | 'am
     id: 'expense-1',
     group_id: 'group-1',
     description: 'Test expense',
+    original_amount: null,
+    original_currency: null,
+    exchange_rate: null,
     created_at: '2026-01-01T00:00:00Z',
     ...overrides,
   }
